@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const userRouters = require("./routers/user.router");
 //express app
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/api/user", userRouters);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the todo app server" });
