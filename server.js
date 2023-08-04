@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const userRouters = require("./routers/user.router");
+const todoRouters = require("./routers/todo.router")
 //express app
 const app = express();
 
@@ -13,6 +14,11 @@ const mongo_url = process.env.MONGO_URL;
 //middlewares
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+});
+
 app.use(
   cors({
     credentials: true,
@@ -20,6 +26,8 @@ app.use(
 );
 
 app.use("/api/user", userRouters);
+app.use("/api/todos",todoRouters)
+
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the todo app server" });
