@@ -6,7 +6,7 @@ const Todos = require("../models/todos.model");
 
 const getAllTodos = async (req, res) => {
   console.log("hello");
-  const user_id = req.user_id;
+  const user_id = req._id;
   const todos = await Todos.find({ user_id }).sort({ createdAt: -1 });
 
   res.status(200).json(todos);
@@ -33,7 +33,6 @@ const getSingleTodo = async (req, res) => {
 //post todo
 
 const postTodo = async (req, res) => {
-  console.log(req.body);
   const { title } = req.body;
 
   let emptyFields = [];
@@ -47,7 +46,7 @@ const postTodo = async (req, res) => {
   }
 
   try {
-    const user_id = req._id;
+    // const user_id = req._id;
 
     //create todo
     const todo = await Todos.create({
@@ -76,9 +75,44 @@ const deleteTodo = async (req, res) => {
   res.status(200).json(todo);
 };
 
+// update todo
+
+const updateTodo = async (req, res) => {
+  const { id } = req.params;
+
+  const { title } = req.body;
+
+  let emptyFields = [];
+
+  if (!title) {
+    emptyFields.push("title");
+  }
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all fields", emptyFields });
+  }
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(404).json({ error: "Please Enter Valid Id " });
+  }
+
+  const todo = await Todos.findOneAndUpdate(
+    { _id: id },
+    { ...req.body },
+    { new: true }
+  );
+
+  if (!todo) {
+    return res.status(400).json({ error: "No Todo Found" });
+  }
+  console.log(todo);
+  res.status(200).json(todo);
+};
+
 module.exports = {
   getAllTodos,
   getSingleTodo,
   deleteTodo,
   postTodo,
+  updateTodo,
 };

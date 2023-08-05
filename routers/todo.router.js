@@ -4,6 +4,7 @@ const {
   getSingleTodo,
   postTodo,
   deleteTodo,
+  updateTodo,
 } = require("../controllers/todos.controller");
 
 const router = express.Router();
@@ -23,5 +24,7 @@ router.post("/", postTodo);
 //delete todo
 
 router.delete("/:id", deleteTodo);
+
+router.patch("/:id", updateTodo);
 
 module.exports = router;
