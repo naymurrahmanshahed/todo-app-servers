@@ -9,7 +9,6 @@ const app = express();
 
 //variables
 const port = process.env.PORT || 5000;
-const mongo_url = process.env.MONGO_URL;
 
 //middlewares
 app.use(express.json());
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 
 //mongodb
 mongoose
-  .connect(mongo_url, {
+  .connect(process.env.MONGO_URL, {
     useUnifiedTopology: true,
   })
   .then(() => {
